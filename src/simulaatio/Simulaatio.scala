@@ -4,6 +4,7 @@ package simulaatio
 
 import scala.swing.MainFrame
 import scala.swing.Panel
+import scala.swing.event.ValueChanged
 import java.awt.Dimension
 import scala.swing.Slider
 import scala.swing.Label
@@ -55,6 +56,25 @@ class GUI(width: Int, height: Int) extends MainFrame{
   this.listenTo(countSlider)
   this.listenTo(startButton)
   this.listenTo(stopButton)
+  
+  // Event handlers for the GUI elements.
+  reactions += {
+    case ValueChanged(`countSlider`) => {
+      // Update the bird amount slider.
+      this.birdCount = countSlider.value
+      this.countLabel.text = this.birdCount.toString()
+    }
+    
+    case ValueChanged(`startButton`) => {
+      // Start the simulation
+      this.start()
+    }
+  }
+  
+  // The main activation method of the simulation
+  def start() = {
+    ???
+  }
 }
 
 class SimulationPanel(width: Int, height: Int) extends Panel {
