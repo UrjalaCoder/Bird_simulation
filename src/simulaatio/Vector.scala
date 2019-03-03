@@ -57,3 +57,29 @@ class Vector(val x: Double, val y: Double) {
   }
 }
 
+// Simple matrix class
+class Matrix2(firstCol: Vector, secondCol: Vector) {
+  val elements = Array(firstCol, secondCol)
+  
+  // Vector-matrix multiplication.
+  def *(v: Vector) = {
+    val x = this.elements(0).x*v.x + this.elements(1).x * v.x
+    val y = this.elements(0).y*v.y + this.elements(1).y * v.y
+    new Vector(x, y)
+  }
+  
+  def determinant: Double = {
+    this.elements(0).x * this.elements(1).y - this.elements(1).x * this.elements(0).y
+  }
+  
+  // Constant multiplication.
+  def *(s: Double) = {
+    new Matrix2(this.elements(0) * s, this.elements(1) * s)
+  }
+  
+  // Assumed that matrix is invertible
+  def inverse: Matrix2 = {
+    new Matrix2(new Vector(this.elements(1).y, -this.elements(0).y), new Vector(-this.elements(1).x, this.elements(0).x)) * this.determinant
+  }
+}
+
