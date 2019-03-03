@@ -79,7 +79,7 @@ class Matrix2(firstCol: Vector, secondCol: Vector) {
   
   // Assumed that matrix is invertible
   def inverse: Matrix2 = {
-    new Matrix2(new Vector(this.elements(1).y, -this.elements(0).y), new Vector(-this.elements(1).x, this.elements(0).x)) * this.determinant
+    new Matrix2(new Vector(this.elements(1).y, -this.elements(0).y), new Vector(-this.elements(1).x, this.elements(0).x)) * (1.0 / this.determinant)
   }
 }
 
