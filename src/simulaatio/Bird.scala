@@ -3,10 +3,9 @@ package simulaatio
 import java.awt.Graphics2D
 import scala.collection.mutable.Buffer
 
-class Bird(private var currentPosition: Vector, initialVelocity: Vector) {
+class Bird(private var currentPosition: Vector, initialVelocity: Vector, private val behaviour: Behaviour) {
   private var currentVelocity = initialVelocity
-  private var force = new Vector(0, 0)
-  private var localBirds = Buffer[Bird]()
+  private var localBirds = Array[Bird]()
   private val mass = 1.0
   
   // Basis vectors of local space iHat and jHat
@@ -45,7 +44,7 @@ class Bird(private var currentPosition: Vector, initialVelocity: Vector) {
   }
   
   // Set the birds in local space
-  def setLocalBirds(birds: Buffer[Bird]) = {
+  def setLocalBirds(birds: Array[Bird]) = {
     def isInSight(bird: Bird) = {
       val deltaVector = bird.position - this.position
       
@@ -87,13 +86,14 @@ class Bird(private var currentPosition: Vector, initialVelocity: Vector) {
     g.fillPolygon(Array(this.position.x, left.x, right.x).map(_.toInt), Array(this.position.y, left.y, right.y).map(_.toInt), 3)
   }
   
+  var counter = 0.0
+  
   def desiredVelocity = {
     // TODO: Behaviours
-    new Vector(1, 1)
+    this.behaviour.desiredVelocity(this.localBirds, this.position, this.velocity)
   }
   
   def steering = {
-    println(this.velocity)
     this.desiredVelocity - this.velocity
   }
   

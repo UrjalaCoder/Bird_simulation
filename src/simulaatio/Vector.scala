@@ -83,3 +83,15 @@ class Matrix2(firstCol: Vector, secondCol: Vector) {
   }
 }
 
+object VectorUnitTests extends App{
+  val a = new Vector(1.0, 2.0)
+  val b = new Vector(5.0, -2.0)
+  
+  // Dot product unit test
+  println(if(a.dot(b) == 1) "[DOT PRODUCT] Success!" else "[DOT PRODUCT] Failed!")
+  
+  // Vector magnitude
+  println(if((a.mag) == Math.sqrt(5.0)) "[MAGNITUDE] Success!" else "[MAGNITUDE] Failed!")
+  
+}
+

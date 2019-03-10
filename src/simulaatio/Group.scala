@@ -11,9 +11,11 @@ class Group(val groupSize: Int) {
     val randomX = random.nextInt(Simulaatio.renderDimensions._1)
     val randomY = random.nextInt(Simulaatio.renderDimensions._2)
     val position = new Vector(randomX, randomY)
-    val velocity = new Vector(0, 0)
     
-    new Bird(position, velocity)
+    // Start with a random velocity
+    val velocity = new Vector(random.nextFloat() * 2 - 1, random.nextFloat() * 2 - 1)
+    
+    new Bird(position, velocity, new Behaviour(0.1, 2.0, 30))
   }
   
   def updateSingleBird(bird: Bird) = {
@@ -31,7 +33,7 @@ class Group(val groupSize: Int) {
     })
     
     
-    bird.setLocalBirds(neighbourBirds.toBuffer)
+    bird.setLocalBirds(neighbourBirds.toArray)
     
     // Lastly update the bird itself.
     bird.update()

@@ -104,7 +104,6 @@ class GUI(width: Int, height: Int) extends MainFrame{
           var one60OfSec = (1.0 / 60.0) * 1000.0
           while(simulationRunning) {
             if(System.nanoTime() / 1000000.0 - lastTime >= one60OfSec) {
-              println(currentGroup.isDefined)
           	  currentGroup.get.updateGroup()
           	  lastTime = System.nanoTime() / 1000000.0
             }
