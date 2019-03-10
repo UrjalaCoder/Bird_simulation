@@ -76,6 +76,10 @@ class GUI(width: Int, height: Int) extends MainFrame{
     text = "Stop"
   }
   
+  val resetButton = new Button {
+    text = "Reset to default"
+  }
+  
   // Collect sliders to one array
   val sliderArray: Array[Slider] = Array(countSlider, cohesionSlider, alignmentSlider, evasionSlider)
   val simulationPanel = new SimulationPanel(640, 480)
@@ -105,6 +109,7 @@ class GUI(width: Int, height: Int) extends MainFrame{
     this.contents += new BoxPanel(Orientation.Horizontal) {
       this.contents += startButton
       this.contents += stopButton
+      this.contents += resetButton
     }
   }
   
@@ -143,28 +148,46 @@ class GUI(width: Int, height: Int) extends MainFrame{
     case ButtonClicked(`stopButton`) => {
       this.stop()
     }
+    
+    case ButtonClicked(`resetButton`) => {
+      if(!this.simulationRunning) {        
+    	  this.alignmentFactor = 10
+    	  this.cohesionFactor = 10
+    	  this.evasionFactor = 30
+    	  
+    	  this.alignmentSlider.value = this.alignmentFactor
+    	  this.cohesionSlider.value = this.cohesionFactor
+    	  this.evasionSlider.value = this.evasionFactor
+    	  
+    	  this.alignmentLabel.text = "Alignment factor: " + this.alignmentFactor.toString()
+    	  this.cohesionLabel.text = "Cohesion factor: " + this.cohesionFactor.toString()
+    	  this.evasionLabel.text = "Separation factor: " + this.evasionFactor.toString()
+      }
+    }
   }
   this.sliderArray.foreach((slider) => {
     this.listenTo(slider)
   })
   this.listenTo(startButton)
   this.listenTo(stopButton)
+  this.listenTo(resetButton)
   
   def stop() = {
     // First set the sliders to active
     this.sliderArray.foreach((slider) => {
       slider.enabled = true
     })
+    this.startButton.enabled = true
     this.simulationRunning = false
   }
   
   // The main activation method of the simulation
   def start() = {
     this.simulationRunning = true
-    
+    this.startButton.enabled = false
     // Disable sliders
     this.sliderArray.foreach((slider) => {
-      slider.enabled
+      slider.enabled = false
     })
     
     // Scaling the values to suit the simulation.
