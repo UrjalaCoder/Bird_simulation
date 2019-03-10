@@ -23,14 +23,49 @@ class GUI(width: Int, height: Int) extends MainFrame{
   var simulationRunning = false
   var currentGroup: Option[Group] = None
   
+  var cohesionFactor = 10
+  var alignmentFactor = 10
+  var evasionFactor = 30
+  
   val countLabel = new Label {
-    text = birdCount.toString()
+    text = "Bird amount: " + birdCount.toString()
   }
   
   val countSlider = new Slider {
     min = 1
-    max = 30
+    max = 50
     value = birdCount
+  }
+  
+  // Slider for controlling the cohesionFactor
+  val cohesionSlider = new Slider {
+    min = 0
+    max = 50
+    value = cohesionFactor
+  }
+  
+  val cohesionLabel = new Label {
+    text = "Cohesion factor: " + cohesionFactor.toString()
+  }
+  
+  val alignmentSlider = new Slider {
+    min = 0
+    max = 50
+    value = alignmentFactor
+  }
+  
+  val alignmentLabel = new Label {
+    text = "Alignment factor: " + alignmentFactor.toString()
+  }
+  
+  val evasionSlider = new Slider {
+    min = 0
+    max = 100
+    value = evasionFactor
+  }
+  
+  val evasionLabel = new Label {
+    text = "Separation factor: " + evasionFactor.toString()
   }
   
   val startButton = new Button {
@@ -41,6 +76,8 @@ class GUI(width: Int, height: Int) extends MainFrame{
     text = "Stop"
   }
   
+  // Collect sliders to one array
+  val sliderArray: Array[Slider] = Array(countSlider, cohesionSlider, alignmentSlider, evasionSlider)
   val simulationPanel = new SimulationPanel(640, 480)
   simulationPanel.visible = true
   this.contents = new BoxPanel(Orientation.Vertical) {
@@ -48,6 +85,21 @@ class GUI(width: Int, height: Int) extends MainFrame{
     this.contents += new BoxPanel(Orientation.Horizontal) {
       this.contents += countLabel
       this.contents += countSlider
+    }
+    
+    this.contents += new BoxPanel(Orientation.Horizontal) {
+      this.contents += cohesionLabel
+      this.contents += cohesionSlider
+    }
+    
+    this.contents += new BoxPanel(Orientation.Horizontal) {
+      this.contents += alignmentLabel
+      this.contents += alignmentSlider
+    }
+    
+    this.contents += new BoxPanel(Orientation.Horizontal) {
+      this.contents += evasionLabel
+      this.contents += evasionSlider
     }
     
     this.contents += new BoxPanel(Orientation.Horizontal) {
@@ -63,7 +115,23 @@ class GUI(width: Int, height: Int) extends MainFrame{
     case ValueChanged(`countSlider`) => {
       // Update the bird amount slider.
       this.birdCount = countSlider.value
-      this.countLabel.text = this.birdCount.toString()
+      this.countLabel.text = "Bird amount: " + this.birdCount.toString()
+    }
+    
+    // Update behaviour sliders
+    case ValueChanged(`cohesionSlider`) => {
+      this.cohesionFactor = cohesionSlider.value
+      this.cohesionLabel.text = "Cohesion factor: " + this.cohesionFactor.toString()
+    }
+    
+    case ValueChanged(`alignmentSlider`) => {
+      this.alignmentFactor = alignmentSlider.value
+      this.alignmentLabel.text = "Alignment factor: " + this.alignmentFactor.toString()
+    }
+    
+    case ValueChanged(`evasionSlider`) => {
+      this.evasionFactor = evasionSlider.value
+      this.evasionLabel.text = "Separation factor: " + this.evasionFactor.toString()
     }
     
     case ButtonClicked(`startButton`) => {
@@ -76,22 +144,31 @@ class GUI(width: Int, height: Int) extends MainFrame{
       this.stop()
     }
   }
-  this.listenTo(countSlider)
+  this.sliderArray.foreach((slider) => {
+    this.listenTo(slider)
+  })
   this.listenTo(startButton)
   this.listenTo(stopButton)
   
   def stop() = {
     // First set the sliders to active
-    this.countSlider.enabled = true
+    this.sliderArray.foreach((slider) => {
+      slider.enabled = true
+    })
     this.simulationRunning = false
   }
   
   // The main activation method of the simulation
   def start() = {
     this.simulationRunning = true
-    this.countSlider.enabled = false
     
-    this.currentGroup = Some(new Group(this.birdCount))
+    // Disable sliders
+    this.sliderArray.foreach((slider) => {
+      slider.enabled
+    })
+    
+    // Scaling the values to suit the simulation.
+    this.currentGroup = Some(new Group(this.birdCount, (this.cohesionFactor / 1000.0, this.alignmentFactor / 10.0, this.evasionFactor)))
     this.simulationPanel.setGroup(this.currentGroup)
     this.simulationPanel.visible = true
     val renderThread = new Thread(this.simulationPanel)

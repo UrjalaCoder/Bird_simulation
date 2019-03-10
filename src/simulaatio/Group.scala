@@ -4,7 +4,7 @@ import scala.util.Random
 import java.awt.Graphics2D
 import scala.collection.mutable.Buffer
 
-class Group(val groupSize: Int) {
+class Group(val groupSize: Int, behaviourArgs: (Double, Double, Double)) {
   val random = new Random
   val localSpaceRadius = 200
   var birds: Array[Bird] = Array.fill(groupSize){
@@ -15,7 +15,7 @@ class Group(val groupSize: Int) {
     // Start with a random velocity
     val velocity = new Vector(random.nextFloat() * 2 - 1, random.nextFloat() * 2 - 1)
     
-    new Bird(position, velocity, new Behaviour(0.1, 2.0, 30))
+    new Bird(position, velocity, new Behaviour(this.behaviourArgs._1, this.behaviourArgs._2, this.behaviourArgs._3))
   }
   
   def updateSingleBird(bird: Bird) = {

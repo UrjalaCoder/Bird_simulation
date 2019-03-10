@@ -52,6 +52,7 @@ class Behaviour(val cohesionFactor: Double, val alignmentFactor: Double, val eva
   
   def desiredVelocity(localBirds: Array[Bird], currentPosition: Vector, currentVelocity: Vector): Vector = {
     val combination = this.cohesion(localBirds, currentPosition) * this.cohesionFactor + this.alignment(localBirds) * this.alignmentFactor + this.separation(localBirds, currentPosition) * this.evasionFactor
+    // println((this.separation(localBirds, currentPosition) * evasionFactor).mag)
     // If no desired velocity return the current velocity.
     if(combination.x == 0 && combination.y == 0) {
       currentVelocity

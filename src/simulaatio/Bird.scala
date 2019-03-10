@@ -6,7 +6,7 @@ import scala.collection.mutable.Buffer
 class Bird(private var currentPosition: Vector, initialVelocity: Vector, private val behaviour: Behaviour) {
   private var currentVelocity = initialVelocity
   private var localBirds = Array[Bird]()
-  private val mass = 1.0
+  private val mass = 10.0
   
   // Basis vectors of local space iHat and jHat
   // jHat points in the direction of velocity
@@ -70,7 +70,7 @@ class Bird(private var currentPosition: Vector, initialVelocity: Vector, private
       val result = (minAngle < angle)
       result
     }
-    this.localBirds = birds
+    this.localBirds = birds.filter(isInSight)
   }
   
   def drawBird(g: Graphics2D) = {
