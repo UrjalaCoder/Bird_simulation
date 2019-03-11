@@ -77,9 +77,16 @@ class Matrix2(firstCol: Vector, secondCol: Vector) {
     new Matrix2(this.elements(0) * s, this.elements(1) * s)
   }
   
-  // Assumed that matrix is invertible
+  // Assumed that matrix is invertible e.g determinant is 0
+  // If det(M) == 0 then return the original matrix.
+  // Should't matter too much because most of the time det(M) != 0. So the times inverse returns the original
+  // are very uncommon.
   def inverse: Matrix2 = {
-    new Matrix2(new Vector(this.elements(1).y, -this.elements(0).y), new Vector(-this.elements(1).x, this.elements(0).x)) * (1.0 / this.determinant)
+    if(this.determinant == 0) {
+      this
+    } else {      
+    	new Matrix2(new Vector(this.elements(1).y, -this.elements(0).y), new Vector(-this.elements(1).x, this.elements(0).x)) * (1.0 / this.determinant)
+    }
   }
 }
 
