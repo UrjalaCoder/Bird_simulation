@@ -68,6 +68,17 @@ class GUI(width: Int, height: Int) extends MainFrame{
     text = "Separation factor: " + evasionFactor.toString()
   }
   
+  var sightRadius = 200
+  val sightRadiusSlider = new Slider {
+    min = 50
+    max = 500
+    value = sightRadius
+  }
+  
+  val sightLabel = new Label {
+    text = "Sight radius: " + sightRadius.toString()
+  }
+  
   val startButton = new Button {
     text = "Start"
   }
@@ -81,7 +92,7 @@ class GUI(width: Int, height: Int) extends MainFrame{
   }
   
   // Collect sliders to one array
-  val sliderArray: Array[Slider] = Array(countSlider, cohesionSlider, alignmentSlider, evasionSlider)
+  val sliderArray: Array[Slider] = Array(countSlider, cohesionSlider, alignmentSlider, evasionSlider, sightRadiusSlider)
   val simulationPanel = new SimulationPanel(640, 480)
   simulationPanel.visible = true
   this.contents = new BoxPanel(Orientation.Vertical) {
@@ -107,10 +118,16 @@ class GUI(width: Int, height: Int) extends MainFrame{
     }
     
     this.contents += new BoxPanel(Orientation.Horizontal) {
+      this.contents += sightLabel
+      this.contents += sightRadiusSlider
+    }
+    
+    this.contents += new BoxPanel(Orientation.Horizontal) {
       this.contents += startButton
       this.contents += stopButton
       this.contents += resetButton
     }
+    
   }
   
   this.visible = true
@@ -139,6 +156,11 @@ class GUI(width: Int, height: Int) extends MainFrame{
       this.evasionLabel.text = "Separation factor: " + this.evasionFactor.toString()
     }
     
+    case ValueChanged(`sightRadiusSlider`) => {
+      this.sightRadius = sightRadiusSlider.value
+      this.sightLabel.text = "Sight radius: " + this.sightRadius.toString()
+    }
+    
     case ButtonClicked(`startButton`) => {
       println("TEST")
       // Start the simulation
@@ -154,14 +176,17 @@ class GUI(width: Int, height: Int) extends MainFrame{
     	  this.alignmentFactor = 10
     	  this.cohesionFactor = 10
     	  this.evasionFactor = 30
+    	  this.sightRadius = 200
     	  
     	  this.alignmentSlider.value = this.alignmentFactor
     	  this.cohesionSlider.value = this.cohesionFactor
     	  this.evasionSlider.value = this.evasionFactor
+    	  this.sightRadiusSlider.value = this.sightRadius
     	  
     	  this.alignmentLabel.text = "Alignment factor: " + this.alignmentFactor.toString()
     	  this.cohesionLabel.text = "Cohesion factor: " + this.cohesionFactor.toString()
     	  this.evasionLabel.text = "Separation factor: " + this.evasionFactor.toString()
+    	  this.sightLabel.text = "Sight radius: " + this.sightRadius.toString()
       }
     }
   }
@@ -191,7 +216,7 @@ class GUI(width: Int, height: Int) extends MainFrame{
     })
     
     // Scaling the values to suit the simulation.
-    this.currentGroup = Some(new Group(this.birdCount, (this.cohesionFactor / 1000.0, this.alignmentFactor / 10.0, this.evasionFactor)))
+    this.currentGroup = Some(new Group(this.birdCount, (this.cohesionFactor / 1000.0, this.alignmentFactor / 10.0, this.evasionFactor), this.sightRadius))
     this.simulationPanel.setGroup(this.currentGroup)
     this.simulationPanel.visible = true
     val renderThread = new Thread(this.simulationPanel)
@@ -266,8 +291,8 @@ object Simulaatio extends App{
     (640, 480)
   }
   
-  val MAX_SPEED = 0.02
-  val MAX_FORCE = 1
+  val MAX_SPEED = 0.01
+  val MAX_FORCE = 0.2
   
   val gui = new GUI(dimensions._1, dimensions._2)
 }

@@ -4,9 +4,9 @@ import scala.util.Random
 import java.awt.Graphics2D
 import scala.collection.mutable.Buffer
 
-class Group(val groupSize: Int, behaviourArgs: (Double, Double, Double)) {
+class Group(val groupSize: Int, behaviourArgs: (Double, Double, Double), birdSightRadius: Int) {
   val random = new Random
-  val localSpaceRadius = 200
+  val localSpaceRadius = birdSightRadius
   var birds: Array[Bird] = Array.fill(groupSize){
     val randomX = random.nextInt(Simulaatio.renderDimensions._1)
     val randomY = random.nextInt(Simulaatio.renderDimensions._2)

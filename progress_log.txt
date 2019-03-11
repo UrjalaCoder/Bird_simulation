@@ -1,0 +1,25 @@
+Tu 11.3.2019
+
+Project is almost done. All the classes have been implemented. Implemented classes are:
+ - GUI
+ - SimulationPanel
+ - Bird
+ - Group
+ - Behaviour
+ - Vector
+ - Matrix2
+
+The classes 'Behaviour' and 'Matrix2' had not been taken into account in the original plan. 'Behaviour' -class is responsible for implementing
+the flocking behaviour. 'Matrix2' is a helper class for 2x2 matrices and it implements some common matrix operations.
+
+The functionality of 'Vector' and 'Matrix2' classes has been confirmed using the VectorUnitTests and MatrixUnitTests objects. The functionality
+of other classes has been confirmed using a visual examination. The functionality of GUI elements has been confirmed by testing the different
+elements.
+
+The project has progressed without any major issues. Most issues have been solved and only some minor tweaking is left to be done e.g. The
+default flocking behaviour and GUI tweaks. 
+
+The program is now fully functional. The project has been worked on at this moment for about 20 hours. The remaining hours are about 5 or less.
+Regarding the schedule, I'm almost on schedule. The project is almost complete only some very minor tweaks are remaining.
+
+  

@@ -63,8 +63,8 @@ class Matrix2(firstCol: Vector, secondCol: Vector) {
   
   // Vector-matrix multiplication.
   def *(v: Vector) = {
-    val x = this.elements(0).x*v.x + this.elements(1).x * v.x
-    val y = this.elements(0).y*v.y + this.elements(1).y * v.y
+    val x = this.elements(0).x*v.x + this.elements(1).x * v.y
+    val y = this.elements(0).y*v.x + this.elements(1).y * v.y
     new Vector(x, y)
   }
   
@@ -81,17 +81,5 @@ class Matrix2(firstCol: Vector, secondCol: Vector) {
   def inverse: Matrix2 = {
     new Matrix2(new Vector(this.elements(1).y, -this.elements(0).y), new Vector(-this.elements(1).x, this.elements(0).x)) * (1.0 / this.determinant)
   }
-}
-
-object VectorUnitTests extends App{
-  val a = new Vector(1.0, 2.0)
-  val b = new Vector(5.0, -2.0)
-  
-  // Dot product unit test
-  println(if(a.dot(b) == 1) "[DOT PRODUCT] Success!" else "[DOT PRODUCT] Failed!")
-  
-  // Vector magnitude
-  println(if((a.mag) == Math.sqrt(5.0)) "[MAGNITUDE] Success!" else "[MAGNITUDE] Failed!")
-  
 }
 

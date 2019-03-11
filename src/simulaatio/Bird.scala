@@ -29,8 +29,8 @@ class Bird(private var currentPosition: Vector, initialVelocity: Vector, private
   def velocity = this.currentVelocity
   
   // Constants for drawing.
-  private val wingAngle: Double = Math.PI / 8
-  private val wingLength: Double = 30.0
+  private val wingAngle: Double = Math.PI / 10.0
+  private val wingLength: Double = 20.0
   
   def distanceToBird(other: Bird) = {
     val deltaX = math.pow(other.position.x - this.position.x, 2)
