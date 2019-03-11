@@ -19,13 +19,13 @@ class GUI(width: Int, height: Int) extends MainFrame{
   this.preferredSize = new Dimension(width, height)
   
   // Local variables used by GUI.
-  var birdCount = 1
+  var birdCount = 10
   var simulationRunning = false
   var currentGroup: Option[Group] = None
   
   var cohesionFactor = 10
   var alignmentFactor = 10
-  var evasionFactor = 30
+  var evasionFactor = 20
   
   val countLabel = new Label {
     text = "Bird amount: " + birdCount.toString()
@@ -175,18 +175,21 @@ class GUI(width: Int, height: Int) extends MainFrame{
       if(!this.simulationRunning) {        
     	  this.alignmentFactor = 10
     	  this.cohesionFactor = 10
-    	  this.evasionFactor = 30
+    	  this.evasionFactor = 20
     	  this.sightRadius = 200
+    	  this.birdCount = 10
     	  
     	  this.alignmentSlider.value = this.alignmentFactor
     	  this.cohesionSlider.value = this.cohesionFactor
     	  this.evasionSlider.value = this.evasionFactor
     	  this.sightRadiusSlider.value = this.sightRadius
+    	  this.countSlider.value = this.birdCount
     	  
     	  this.alignmentLabel.text = "Alignment factor: " + this.alignmentFactor.toString()
     	  this.cohesionLabel.text = "Cohesion factor: " + this.cohesionFactor.toString()
     	  this.evasionLabel.text = "Separation factor: " + this.evasionFactor.toString()
     	  this.sightLabel.text = "Sight radius: " + this.sightRadius.toString()
+    	  this.countLabel.text = "Bird amont: " + this.birdCount.toString()
       }
     }
   }
@@ -292,7 +295,7 @@ object Simulaatio extends App{
   }
   
   val MAX_SPEED = 0.01
-  val MAX_FORCE = 0.2
+  val MAX_FORCE = 0.3
   
   val gui = new GUI(dimensions._1, dimensions._2)
 }
