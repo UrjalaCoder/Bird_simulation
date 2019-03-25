@@ -22,4 +22,10 @@ default flocking behaviour and GUI tweaks.
 The program is now fully functional. The project has been worked on at this moment for about 20 hours. The remaining hours are about 5 or less.
 Regarding the schedule, I'm almost on schedule. The project is almost complete only some very minor tweaks are remaining.
 
+--------------------------------------------------------------------------------------------------------------------------------
+Mon 25.3
+
+I have not done much for the project since all important functionalities have been implemented.
+I have tweaked the default simulation arguments and made some minor refacktoring.
+Time spent is around 1 hour. I'm on schedule since project is now almost complete.
   
