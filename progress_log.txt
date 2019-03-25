@@ -26,6 +26,9 @@ Regarding the schedule, I'm almost on schedule. The project is almost complete o
 Mon 25.3
 
 I have not done much for the project since all important functionalities have been implemented.
-I have tweaked the default simulation arguments and made some minor refacktoring.
+
+I have tweaked the default simulation arguments and made some minor refactoring.
+
 Time spent is around 1 hour. I'm on schedule since project is now almost complete.
-The only thing remaining is to optimize the default arguments for simulation.
+
+The only thing remaining is to optimize the default arguments for simulation. Have to find a good set of default values where the movement is most natural looking.

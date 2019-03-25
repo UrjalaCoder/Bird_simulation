@@ -162,7 +162,6 @@ class GUI(width: Int, height: Int) extends MainFrame{
     }
     
     case ButtonClicked(`startButton`) => {
-      println("TEST")
       // Start the simulation
       this.start()
     }
@@ -227,7 +226,6 @@ class GUI(width: Int, height: Int) extends MainFrame{
     // Create a new update thread
     val updateThread = new Thread() {
       override def run() = {
-        println("Hello!")
         var lastTime = System.nanoTime() / 1000000.0
           var one60OfSec = (1.0 / 60.0) * 1000.0
           while(simulationRunning) {
