@@ -32,3 +32,9 @@ I have tweaked the default simulation arguments and made some minor refactoring.
 Time spent is around 1 hour. I'm on schedule since project is now almost complete.
 
 The only thing remaining is to optimize the default arguments for simulation. Have to find a good set of default values where the movement is most natural looking.
+
+
+--------------------------------------------------------------------------------------------------------------------------------
+Mon 8.4
+
+I have done absolutely nothing for the project. Been busy with exams. Only thing remaining is some minor GUI improvements and finding optimal parameters for simulation.
