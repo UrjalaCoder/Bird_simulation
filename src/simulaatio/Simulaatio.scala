@@ -14,18 +14,30 @@ import scala.swing.BoxPanel
 import scala.swing.Orientation
 import java.awt.Graphics2D
 import java.awt.Color
+import scala.swing.ComboBox
+import scala.collection.mutable.Map
+import scala.swing.event.SelectionChanged
 
 class GUI(width: Int, height: Int) extends MainFrame{
   this.preferredSize = new Dimension(width, height)
   
+  // Default parameters birdCount, cohesionFactor, alignmentFactor, evasionFactor, sightRadius
+  val birdDefault = (20, 5, 5, 10, 70)
+  
+  // Presets
+  val slowAndEvasive = (20, 1, 1, 25, 50)
+  val fastTurners = (20, 5, 30, 10, 70)
+  
+  val presets = Map[String, (Int, Int, Int, Int, Int)]("Slow and evasive" -> slowAndEvasive, "Fast turners" -> fastTurners, "Default" -> birdDefault)
+  
   // Local variables used by GUI.
-  var birdCount = 10
+  var birdCount = birdDefault._1
   var simulationRunning = false
   var currentGroup: Option[Group] = None
   
-  var cohesionFactor = 10
-  var alignmentFactor = 10
-  var evasionFactor = 20
+  var cohesionFactor = birdDefault._2
+  var alignmentFactor = birdDefault._3
+  var evasionFactor = birdDefault._4
   
   val countLabel = new Label {
     text = "Bird amount: " + birdCount.toString()
@@ -68,7 +80,7 @@ class GUI(width: Int, height: Int) extends MainFrame{
     text = "Separation factor: " + evasionFactor.toString()
   }
   
-  var sightRadius = 200
+  var sightRadius = birdDefault._5
   val sightRadiusSlider = new Slider {
     min = 50
     max = 500
@@ -78,6 +90,8 @@ class GUI(width: Int, height: Int) extends MainFrame{
   val sightLabel = new Label {
     text = "Sight radius: " + sightRadius.toString()
   }
+  
+  val parameterMenu = new ComboBox(presets.keys.toList)
   
   val startButton = new Button {
     text = "Start"
@@ -128,6 +142,9 @@ class GUI(width: Int, height: Int) extends MainFrame{
       this.contents += resetButton
     }
     
+    this.contents += new BoxPanel(Orientation.Horizontal) {
+      this.contents += parameterMenu
+    }
   }
   
   this.visible = true
@@ -172,24 +189,13 @@ class GUI(width: Int, height: Int) extends MainFrame{
     
     case ButtonClicked(`resetButton`) => {
       if(!this.simulationRunning) {        
-    	  this.alignmentFactor = 10
-    	  this.cohesionFactor = 10
-    	  this.evasionFactor = 20
-    	  this.sightRadius = 200
-    	  this.birdCount = 10
-    	  
-    	  this.alignmentSlider.value = this.alignmentFactor
-    	  this.cohesionSlider.value = this.cohesionFactor
-    	  this.evasionSlider.value = this.evasionFactor
-    	  this.sightRadiusSlider.value = this.sightRadius
-    	  this.countSlider.value = this.birdCount
-    	  
-    	  this.alignmentLabel.text = "Alignment factor: " + this.alignmentFactor.toString()
-    	  this.cohesionLabel.text = "Cohesion factor: " + this.cohesionFactor.toString()
-    	  this.evasionLabel.text = "Separation factor: " + this.evasionFactor.toString()
-    	  this.sightLabel.text = "Sight radius: " + this.sightRadius.toString()
-    	  this.countLabel.text = "Bird amont: " + this.birdCount.toString()
+    	  this.setToPreset(birdDefault)
       }
+    }
+    
+    case SelectionChanged(`parameterMenu`) => {
+      if(!this.simulationRunning)
+        this.setToPreset(presets.getOrElse(parameterMenu.selection.item, birdDefault))
     }
   }
   this.sliderArray.foreach((slider) => {
@@ -198,6 +204,27 @@ class GUI(width: Int, height: Int) extends MainFrame{
   this.listenTo(startButton)
   this.listenTo(stopButton)
   this.listenTo(resetButton)
+  this.listenTo(parameterMenu.selection)
+  
+  def setToPreset(preset: (Int, Int, Int, Int, Int)) = {
+    this.birdCount = preset._1
+	  this.cohesionFactor = preset._2
+	  this.alignmentFactor = preset._3
+	  this.evasionFactor = preset._4
+	  this.sightRadius = preset._5
+	  
+	  this.alignmentSlider.value = this.alignmentFactor
+	  this.cohesionSlider.value = this.cohesionFactor
+	  this.evasionSlider.value = this.evasionFactor
+	  this.sightRadiusSlider.value = this.sightRadius
+	  this.countSlider.value = this.birdCount
+	  
+	  this.alignmentLabel.text = "Alignment factor: " + this.alignmentFactor.toString()
+	  this.cohesionLabel.text = "Cohesion factor: " + this.cohesionFactor.toString()
+	  this.evasionLabel.text = "Separation factor: " + this.evasionFactor.toString()
+	  this.sightLabel.text = "Sight radius: " + this.sightRadius.toString()
+	  this.countLabel.text = "Bird amont: " + this.birdCount.toString()
+  }
   
   def stop() = {
     // First set the sliders to active
@@ -205,6 +232,7 @@ class GUI(width: Int, height: Int) extends MainFrame{
       slider.enabled = true
     })
     this.startButton.enabled = true
+    this.parameterMenu.enabled = true
     this.simulationRunning = false
   }
   
@@ -216,6 +244,9 @@ class GUI(width: Int, height: Int) extends MainFrame{
     this.sliderArray.foreach((slider) => {
       slider.enabled = false
     })
+    
+    // Disable preset menu.
+    this.parameterMenu.enabled = false
     
     // Scaling the values to suit the simulation.
     this.currentGroup = Some(new Group(this.birdCount, (this.cohesionFactor / 1000.0, this.alignmentFactor / 10.0, this.evasionFactor), this.sightRadius))
