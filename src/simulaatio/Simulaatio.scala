@@ -92,6 +92,7 @@ class GUI(width: Int, height: Int) extends MainFrame{
   }
   
   val parameterMenu = new ComboBox(presets.keys.toList)
+  parameterMenu.selection.item = "Default"
   
   val startButton = new Button {
     text = "Start"
