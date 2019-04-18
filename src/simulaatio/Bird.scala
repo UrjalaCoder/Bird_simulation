@@ -1,18 +1,17 @@
 package simulaatio
 
 import java.awt.Graphics2D
-import scala.collection.mutable.Buffer
 
-class Bird(private var currentPosition: Vector, initialVelocity: Vector, private val behaviour: Behaviour) {
+class Bird(private var currentPosition: Vector2, initialVelocity: Vector2, private val behaviour: Behaviour) {
   private var currentVelocity = initialVelocity
   private var localBirds = Array[Bird]()
   private val mass = 10.0
   
-  // Basis vectors of local space iHat and jHat
+  // Basis Vector2s of local space iHat and jHat
   // jHat points in the direction of velocity
-  def jHat = {
+  private def jHat = {
    if(this.velocity.x == 0 && this.velocity.y == 0) {
-     new Vector(0, 1)
+     new Vector2(0, 1)
    } else {     
 	   this.velocity.unit 
    }
@@ -20,9 +19,9 @@ class Bird(private var currentPosition: Vector, initialVelocity: Vector, private
   
   // iHat always points perpendicular to the jHat.
   // iHat is always to the right of the bird's location.
-  def iHat = {
-    // Cross product of j and k vector.
-    new Vector(this.jHat.y, -this.jHat.x)
+  private def iHat = {
+    // Cross product of j and k Vector2.
+    new Vector2(this.jHat.y, -this.jHat.x)
   }
   
   def position = this.currentPosition
@@ -38,19 +37,19 @@ class Bird(private var currentPosition: Vector, initialVelocity: Vector, private
     math.sqrt(deltaX + deltaY)
   }
   
-  // Local space basis vector matrix
-  def basisVectorMatrix: Matrix2 = {
+  // Local space basis Vector2 matrix
+ private def basisVector2Matrix: Matrix2 = {
     new Matrix2(this.iHat, this.jHat)
   }
   
   // Set the birds in local space
   def setLocalBirds(birds: Array[Bird]) = {
     def isInSight(bird: Bird) = {
-      val deltaVector = bird.position - this.position
+      val deltaVector2 = bird.position - this.position
       
-      val localDeltaVector = this.basisVectorMatrix.inverse * deltaVector
-      val deltaX = localDeltaVector.x
-      val deltaY = localDeltaVector.y
+      val localDeltaVector2 = this.basisVector2Matrix.inverse * deltaVector2
+      val deltaX = localDeltaVector2.x
+      val deltaY = localDeltaVector2.y
       var angle = 0.0
       
       // Minimum angle
@@ -74,11 +73,11 @@ class Bird(private var currentPosition: Vector, initialVelocity: Vector, private
   }
   
   def drawBird(g: Graphics2D) = {
-    // Vectors that represent the left and right wings of the bird.
+    // Vector2s that represent the left and right wings of the bird.
     val a = this.iHat * -math.sin(this.wingAngle) * this.wingLength - this.jHat * math.cos(this.wingAngle) * this.wingLength
     val b = this.iHat * math.sin(this.wingAngle) * this.wingLength - this.jHat * math.cos(this.wingAngle) * this.wingLength
     
-    // Global position vectors of the tips of the wings.
+    // Global position Vector2s of the tips of the wings.
     val left = this.position + a
     val right = this.position + b
     
@@ -88,16 +87,16 @@ class Bird(private var currentPosition: Vector, initialVelocity: Vector, private
   
   var counter = 0.0
   
-  def desiredVelocity = {
+  private def desiredVelocity = {
     // TODO: Behaviours
     this.behaviour.desiredVelocity(this.localBirds, this.position, this.velocity)
   }
   
-  def steering = {
+  private def steering = {
     this.desiredVelocity - this.velocity
   }
   
-  def steeringAcceleration = {
+  private def steeringAcceleration: Vector2 = {
     if(this.steering.mag >= Simulaatio.MAX_FORCE) {
       this.steering.unit * Simulaatio.MAX_FORCE / this.mass
     } else {
@@ -105,7 +104,7 @@ class Bird(private var currentPosition: Vector, initialVelocity: Vector, private
     }
   }
   
-  def accelerate() = {
+  private def accelerate() = {
     this.currentVelocity = this.velocity + this.steeringAcceleration
   }
   
@@ -114,16 +113,16 @@ class Bird(private var currentPosition: Vector, initialVelocity: Vector, private
     this.accelerate()
     this.currentPosition = this.currentPosition + this.velocity
     if(this.position.x >= Simulaatio.renderDimensions._1) {
-      this.currentPosition = new Vector(1, this.position.y)
+      this.currentPosition = new Vector2(1, this.position.y)
     }
     if(this.position.x < 0) {
-      this.currentPosition = new Vector(Simulaatio.renderDimensions._1 - 1, this.position.y)
+      this.currentPosition = new Vector2(Simulaatio.renderDimensions._1 - 1, this.position.y)
     } 
     if(this.position.y >= Simulaatio.renderDimensions._2) {
-      this.currentPosition = new Vector(this.position.x, 1)
+      this.currentPosition = new Vector2(this.position.x, 1)
     } 
     if(this.position.y < 0) {
-      this.currentPosition = new Vector(this.position.x, Simulaatio.renderDimensions._2 - 1)
+      this.currentPosition = new Vector2(this.position.x, Simulaatio.renderDimensions._2 - 1)
     } 
     if(this.currentVelocity.mag >= Simulaatio.MAX_SPEED) {
       this.currentVelocity = this.velocity.unit * 1

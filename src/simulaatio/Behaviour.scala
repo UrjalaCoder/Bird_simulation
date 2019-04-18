@@ -1,26 +1,26 @@
 package simulaatio
 
 class Behaviour(val cohesionFactor: Double, val alignmentFactor: Double, val evasionFactor: Double) {
-  def alignment(localBirds: Array[Bird]): Vector = {
-    // Compute the average velocity vectors of local birds.
+  private def alignment(localBirds: Array[Bird]): Vector2 = {
+    // Compute the average velocity Vector2s of local birds.
     
-    var averageVector = new Vector(0, 0)
+    var averageVector2 = new Vector2(0, 0)
     localBirds.foreach((bird) => {
-      averageVector = averageVector + bird.velocity
+      averageVector2 = averageVector2 + bird.velocity
     })
     
     if(localBirds.nonEmpty) {
-      averageVector / localBirds.size
+      averageVector2 / localBirds.size
     } else {
-      new Vector(0, 0)
+      new Vector2(0, 0)
     }
   }
   
-  def cohesion(localBirds: Array[Bird], currentPosition: Vector): Vector = {
-    // Compute the average position vectors of local birds.
+  private def cohesion(localBirds: Array[Bird], currentPosition: Vector2): Vector2 = {
+    // Compute the average position Vector2s of local birds.
     // Finally subtract the owner bird's position from the average.
     
-    var averagePosition = new Vector(0, 0)
+    var averagePosition = new Vector2(0, 0)
     localBirds.foreach((bird) => {
       averagePosition = averagePosition + bird.position
     })
@@ -29,12 +29,12 @@ class Behaviour(val cohesionFactor: Double, val alignmentFactor: Double, val eva
       averagePosition = averagePosition / localBirds.size
       averagePosition - currentPosition
     } else {
-      new Vector(0, 0)
+      new Vector2(0, 0)
     }
   }
   
-  def separation(localBirds: Array[Bird], currentPosition: Vector): Vector = {
-    var totalForce = new Vector(0, 0)
+  private def separation(localBirds: Array[Bird], currentPosition: Vector2): Vector2 = {
+    var totalForce = new Vector2(0, 0)
     localBirds.foreach((bird) => {
       val deltaPosition = currentPosition - bird.position
       val distance = deltaPosition.mag
@@ -46,11 +46,11 @@ class Behaviour(val cohesionFactor: Double, val alignmentFactor: Double, val eva
     if(localBirds.nonEmpty) {
       totalForce
     } else {
-      new Vector(0, 0)
+      new Vector2(0, 0)
     }
   }
   
-  def desiredVelocity(localBirds: Array[Bird], currentPosition: Vector, currentVelocity: Vector): Vector = {
+  def desiredVelocity(localBirds: Array[Bird], currentPosition: Vector2, currentVelocity: Vector2): Vector2 = {
     val combination = this.cohesion(localBirds, currentPosition) * this.cohesionFactor + this.alignment(localBirds) * this.alignmentFactor + this.separation(localBirds, currentPosition) * this.evasionFactor
     // println((this.separation(localBirds, currentPosition) * evasionFactor).mag)
     // If no desired velocity return the current velocity.

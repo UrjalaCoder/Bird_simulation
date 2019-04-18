@@ -1,16 +1,16 @@
 package simulaatio
 
-object VectorUnitTests extends App{
-  val a = new Vector(1.0, 2.0)
-  val b = new Vector(5.0, -2.0)
+object Vector2UnitTests extends App{
+  val a = new Vector2(1.0, 2.0)
+  val b = new Vector2(5.0, -2.0)
   
   // Dot product unit test
   println(if(a.dot(b) == 1) "[DOT PRODUCT] Success!" else "[DOT PRODUCT] Failed!")
   
-  // Vector magnitude
+  // Vector2 magnitude
   println(if((a.mag) == Math.sqrt(5.0)) "[MAGNITUDE] Success!" else "[MAGNITUDE] Failed!")
   
-  // Vector addition and subtraction
+  // Vector2 addition and subtraction
   val c = a + b
   if(c.x == 6.0 && c.y == 0) {    
 	  println("[ADDITION] Success!")
@@ -25,7 +25,7 @@ object VectorUnitTests extends App{
     println("[SUBTRACTION] Failed!")
   }
   
-  // Vector-scalar multiplication
+  // Vector2-scalar multiplication
   val scaledA = a * 2
   if(scaledA.x == 2.0 && scaledA.y == 4.0) {
     println("[SCALING] Success!")
@@ -33,12 +33,12 @@ object VectorUnitTests extends App{
     println("[SCALING] Failed!")
   }
   
-  // Unit vector
+  // Unit Vector2
   val unitB = b.unit
   val bMag = b.mag
   if(unitB.x == (b.x / b.mag) && unitB.y == b.y / b.mag) {
-    println("[UNIT VECTOR] Success!")
+    println("[UNIT Vector2] Success!")
   } else {
-    println("[UNIT VECTOR] Failed!")
+    println("[UNIT Vector2] Failed!")
   }
 }
