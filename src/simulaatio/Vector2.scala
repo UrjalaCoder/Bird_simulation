@@ -59,7 +59,8 @@ class Vector2(val x: Double, val y: Double) {
 
 // Simple matrix class
 class Matrix2(firstCol: Vector2, secondCol: Vector2) {
-  val elements = Array(firstCol, secondCol)
+  
+  val elements = Vector[Vector2](firstCol, secondCol)
   
   // Vector2-matrix multiplication.
   def *(v: Vector2) = {

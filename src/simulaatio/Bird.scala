@@ -4,7 +4,7 @@ import java.awt.Graphics2D
 
 class Bird(private var currentPosition: Vector2, initialVelocity: Vector2, private val behaviour: Behaviour) {
   private var currentVelocity = initialVelocity
-  private var localBirds = Array[Bird]()
+  private var localBirds = Vector[Bird]()
   private val mass = 10.0
   
   // Basis Vector2s of local space iHat and jHat
@@ -43,7 +43,7 @@ class Bird(private var currentPosition: Vector2, initialVelocity: Vector2, priva
   }
   
   // Set the birds in local space
-  def setLocalBirds(birds: Array[Bird]) = {
+  def setLocalBirds(birds: Vector[Bird]) = {
     def isInSight(bird: Bird) = {
       val deltaVector2 = bird.position - this.position
       

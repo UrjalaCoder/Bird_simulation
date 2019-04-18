@@ -15,7 +15,7 @@ import scala.swing.Orientation
 import java.awt.Graphics2D
 import java.awt.Color
 import scala.swing.ComboBox
-import scala.collection.mutable.Map
+import scala.collection.immutable.Map
 import scala.swing.event.SelectionChanged
 
 class GUI(width: Int, height: Int) extends MainFrame{
@@ -105,8 +105,8 @@ class GUI(width: Int, height: Int) extends MainFrame{
     text = "Reset to default"
   }
   
-  // Collect sliders to one array
-  val sliderArray: Array[Slider] = Array(countSlider, cohesionSlider, alignmentSlider, evasionSlider, sightRadiusSlider)
+  // Collect sliders to one Vector
+  val sliderVector: Vector[Slider] = Vector(countSlider, cohesionSlider, alignmentSlider, evasionSlider, sightRadiusSlider)
   val simulationPanel = new SimulationPanel(640, 480)
   simulationPanel.visible = true
   this.contents = new BoxPanel(Orientation.Vertical) {
@@ -198,7 +198,7 @@ class GUI(width: Int, height: Int) extends MainFrame{
         this.setToPreset(presets.getOrElse(parameterMenu.selection.item, birdDefault))
     }
   }
-  this.sliderArray.foreach((slider) => {
+  this.sliderVector.foreach((slider) => {
     this.listenTo(slider)
   })
   this.listenTo(startButton)
@@ -228,7 +228,7 @@ class GUI(width: Int, height: Int) extends MainFrame{
   
   def stop() = {
     // First set the sliders to active
-    this.sliderArray.foreach((slider) => {
+    this.sliderVector.foreach((slider) => {
       slider.enabled = true
     })
     this.startButton.enabled = true
@@ -241,7 +241,7 @@ class GUI(width: Int, height: Int) extends MainFrame{
     this.simulationRunning = true
     this.startButton.enabled = false
     // Disable sliders
-    this.sliderArray.foreach((slider) => {
+    this.sliderVector.foreach((slider) => {
       slider.enabled = false
     })
     

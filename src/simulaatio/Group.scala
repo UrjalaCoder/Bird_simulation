@@ -6,7 +6,7 @@ import java.awt.Graphics2D
 class Group(val groupSize: Int, behaviourArgs: (Double, Double, Double), birdSightRadius: Int) {
   val random = new Random
   val localSpaceRadius = birdSightRadius
-  var birds: Array[Bird] = (Array.fill(groupSize){
+  var birds: Vector[Bird] = (Array.fill(groupSize){
     val randomX = random.nextInt(Simulaatio.renderDimensions._1)
     val randomY = random.nextInt(Simulaatio.renderDimensions._2)
     val position = new Vector2(randomX, randomY)
@@ -15,7 +15,7 @@ class Group(val groupSize: Int, behaviourArgs: (Double, Double, Double), birdSig
     val velocity = new Vector2(random.nextFloat() * 2 - 1, random.nextFloat() * 2 - 1)
     
     new Bird(position, velocity, new Behaviour(this.behaviourArgs._1, this.behaviourArgs._2, this.behaviourArgs._3))
-  })
+  }).toVector
   
   def updateSingleBird(bird: Bird) = {
     // println(bird.position)
@@ -32,7 +32,7 @@ class Group(val groupSize: Int, behaviourArgs: (Double, Double, Double), birdSig
     })
     
     
-    bird.setLocalBirds(neighbourBirds.toArray)
+    bird.setLocalBirds(neighbourBirds)
     
     // Lastly update the bird itself.
     bird.update()
