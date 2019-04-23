@@ -5,7 +5,7 @@ import java.awt.Graphics2D
 class Bird(private var currentPosition: Vector2, initialVelocity: Vector2, private val behaviour: Behaviour) {
   private var currentVelocity = initialVelocity
   private var localBirds = Vector[Bird]()
-  private val mass = 10.0
+  private val mass = 20.0
   
   // Basis Vector2s of local space iHat and jHat
   // jHat points in the direction of velocity
@@ -31,6 +31,7 @@ class Bird(private var currentPosition: Vector2, initialVelocity: Vector2, priva
   private val wingAngle: Double = Math.PI / 10.0
   private val wingLength: Double = 20.0
   
+  // Euclidean distance in 2D.
   def distanceToBird(other: Bird) = {
     val deltaX = math.pow(other.position.x - this.position.x, 2)
     val deltaY = math.pow(other.position.y - this.position.y, 2)
@@ -44,6 +45,8 @@ class Bird(private var currentPosition: Vector2, initialVelocity: Vector2, priva
   
   // Set the birds in local space
   def setLocalBirds(birds: Vector[Bird]) = {
+    
+    // This helper method determines if the bird can "see"
     def isInSight(bird: Bird) = {
       val deltaVector2 = bird.position - this.position
       
@@ -53,8 +56,10 @@ class Bird(private var currentPosition: Vector2, initialVelocity: Vector2, priva
       var angle = 0.0
       
       // Minimum angle
+      // The minimum angle that is used to determine the view.
       val minAngle = -(Math.PI / 2.0 - this.wingAngle / 2.0)
       
+      // Fix the angle to match orientation.
       if(deltaX > 0 && deltaY > 0) {
         angle = math.atan(deltaY / deltaX)
       } else if(deltaX > 0 && deltaY < 0) {
@@ -66,8 +71,8 @@ class Bird(private var currentPosition: Vector2, initialVelocity: Vector2, priva
       } else if(deltaX == 0 && deltaY > 0) {
         angle = Math.PI / 2.0
       }
-      val result = (minAngle < angle)
-      result
+      
+      (minAngle < angle)
     }
     this.localBirds = birds.filter(isInSight)
   }
@@ -81,14 +86,12 @@ class Bird(private var currentPosition: Vector2, initialVelocity: Vector2, priva
     val left = this.position + a
     val right = this.position + b
     
-    // TODO: Draw the shape
     g.fillPolygon(Array(this.position.x, left.x, right.x).map(_.toInt), Array(this.position.y, left.y, right.y).map(_.toInt), 3)
   }
   
   var counter = 0.0
   
   private def desiredVelocity = {
-    // TODO: Behaviours
     this.behaviour.desiredVelocity(this.localBirds, this.position, this.velocity)
   }
   
@@ -125,7 +128,8 @@ class Bird(private var currentPosition: Vector2, initialVelocity: Vector2, priva
       this.currentPosition = new Vector2(this.position.x, Simulaatio.renderDimensions._2 - 1)
     } 
     if(this.currentVelocity.mag >= Simulaatio.MAX_SPEED) {
-      this.currentVelocity = this.velocity.unit * 1
+      
+      this.currentVelocity = this.velocity.unit * Simulaatio.MAX_SPEED
     }
     
     

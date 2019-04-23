@@ -1,5 +1,9 @@
 package simulaatio
 
+/*
+ * Unit tests for testing the Vector2 class.
+ */
+
 object Vector2UnitTests extends App{
   val a = new Vector2(1.0, 2.0)
   val b = new Vector2(5.0, -2.0)

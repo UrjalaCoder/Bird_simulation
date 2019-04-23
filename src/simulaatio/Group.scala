@@ -18,11 +18,12 @@ class Group(val groupSize: Int, behaviourArgs: (Double, Double, Double), birdSig
   }).toVector
   
   def updateSingleBird(bird: Bird) = {
-    // println(bird.position)
+    // First remove the bird itself.
     val otherBirds = this.birds.filter((other: Bird) => {
       other != bird
     })
     
+    // Then calculate the distance.
     var neighbourBirds = otherBirds.filter((other) => {
       if(bird.distanceToBird(other) <= this.localSpaceRadius) {
         true

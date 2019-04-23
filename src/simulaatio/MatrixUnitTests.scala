@@ -1,5 +1,9 @@
 package simulaatio
 
+/*
+ * Unit tests for Matrix2 class.
+ */
+
 object MatrixUnitTests extends App {
   val matrix = new Matrix2(new Vector2(1, -4), new Vector2(1, 3))
   

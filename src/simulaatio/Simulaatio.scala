@@ -22,13 +22,13 @@ class GUI(width: Int, height: Int) extends MainFrame{
   this.preferredSize = new Dimension(width, height)
   
   // Default parameters birdCount, cohesionFactor, alignmentFactor, evasionFactor, sightRadius
-  val birdDefault = (20, 5, 5, 10, 70)
+  val birdDefault = (20, 10, 10, 7, 70)
   
   // Presets
-  val slowAndEvasive = (20, 1, 1, 25, 50)
-  val fastTurners = (20, 5, 30, 10, 70)
+  val slowAndEvasive = (20, 5, 5, 40, 50)
+  val fastTurners = (20, 5, 30, 5, 70)
   
-  val presets = Map[String, (Int, Int, Int, Int, Int)]("Slow and evasive" -> slowAndEvasive, "Fast turners" -> fastTurners, "Default" -> birdDefault)
+  val presets = Map[String, (Int, Int, Int, Int, Int)]("Slow and evasive" -> slowAndEvasive, "Close and fast turners" -> fastTurners, "Default" -> birdDefault)
   
   // Local variables used by GUI.
   var birdCount = birdDefault._1
@@ -43,16 +43,18 @@ class GUI(width: Int, height: Int) extends MainFrame{
     text = "Bird amount: " + birdCount.toString()
   }
   
+  val maxParameterVal = 50
+  
   val countSlider = new Slider {
     min = 1
-    max = 50
+    max = 100
     value = birdCount
   }
   
   // Slider for controlling the cohesionFactor
   val cohesionSlider = new Slider {
     min = 0
-    max = 50
+    max = maxParameterVal
     value = cohesionFactor
   }
   
@@ -62,7 +64,7 @@ class GUI(width: Int, height: Int) extends MainFrame{
   
   val alignmentSlider = new Slider {
     min = 0
-    max = 50
+    max = maxParameterVal
     value = alignmentFactor
   }
   
@@ -72,7 +74,7 @@ class GUI(width: Int, height: Int) extends MainFrame{
   
   val evasionSlider = new Slider {
     min = 0
-    max = 100
+    max = maxParameterVal
     value = evasionFactor
   }
   
@@ -235,6 +237,7 @@ class GUI(width: Int, height: Int) extends MainFrame{
     this.startButton.enabled = true
     this.parameterMenu.enabled = true
     this.simulationRunning = false
+    this.resetButton.enabled = true
   }
   
   // The main activation method of the simulation
@@ -248,9 +251,15 @@ class GUI(width: Int, height: Int) extends MainFrame{
     
     // Disable preset menu.
     this.parameterMenu.enabled = false
+    this.resetButton.enabled = false
     
     // Scaling the values to suit the simulation.
-    this.currentGroup = Some(new Group(this.birdCount, (this.cohesionFactor / 1000.0, this.alignmentFactor / 10.0, this.evasionFactor), this.sightRadius))
+    val cohesion = Math.pow(10, this.cohesionFactor / 10.0) * Simulaatio.cohesionBaseFactor
+    val alignment = Math.pow(10, this.alignmentFactor / 10.0) * Simulaatio.alignmentBaseFactor
+    val separation = Math.pow(10, this.evasionFactor / 10.0) * Simulaatio.separationBaseFactor
+    
+    
+    this.currentGroup = Some(new Group(this.birdCount, (cohesion, alignment, separation), this.sightRadius))
     this.simulationPanel.setGroup(this.currentGroup)
     this.simulationPanel.visible = true
     val renderThread = new Thread(this.simulationPanel)
@@ -314,6 +323,10 @@ class SimulationPanel(width: Int, height: Int) extends Panel with Runnable {
   }
 }
 
+/*
+ * Starting point of the program.
+ */
+
 object Simulaatio extends App{
   
   def dimensions = {
@@ -324,7 +337,12 @@ object Simulaatio extends App{
     (640, 480)
   }
   
-  val MAX_SPEED = 0.01
+  // Base factors for the simulation.
+  val cohesionBaseFactor = 0.003
+  val separationBaseFactor = 10.0
+  val alignmentBaseFactor = 1.0
+  
+  val MAX_SPEED = 1.0
   val MAX_FORCE = 0.3
   
   val gui = new GUI(dimensions._1, dimensions._2)
