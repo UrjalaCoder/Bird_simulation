@@ -26,9 +26,9 @@ class GUI(width: Int, height: Int) extends MainFrame{
   
   // Presets
   val slowAndEvasive = (20, 5, 5, 40, 50)
-  val fastTurners = (20, 5, 30, 5, 70)
+  val fastTurners = (20, 30, 15, 1, 70)
   
-  val presets = Map[String, (Int, Int, Int, Int, Int)]("Slow and evasive" -> slowAndEvasive, "Close and fast turners" -> fastTurners, "Default" -> birdDefault)
+  val presets = Map[String, (Int, Int, Int, Int, Int)]("Slow and evasive" -> slowAndEvasive, "Close and comfortable" -> fastTurners, "Default" -> birdDefault)
   
   // Local variables used by GUI.
   var birdCount = birdDefault._1
@@ -257,6 +257,10 @@ class GUI(width: Int, height: Int) extends MainFrame{
     val cohesion = Math.pow(10, this.cohesionFactor / 10.0) * Simulaatio.cohesionBaseFactor
     val alignment = Math.pow(10, this.alignmentFactor / 10.0) * Simulaatio.alignmentBaseFactor
     val separation = Math.pow(10, this.evasionFactor / 10.0) * Simulaatio.separationBaseFactor
+    /*
+    println("Cohesion: " + cohesion)
+    println("Separation: " + separation)
+    println("Alignment: " + alignment)*/
     
     
     this.currentGroup = Some(new Group(this.birdCount, (cohesion, alignment, separation), this.sightRadius))
@@ -343,7 +347,7 @@ object Simulaatio extends App{
   val alignmentBaseFactor = 1.0
   
   val MAX_SPEED = 1.0
-  val MAX_FORCE = 0.3
+  val MAX_FORCE = 0.5
   
   val gui = new GUI(dimensions._1, dimensions._2)
 }
